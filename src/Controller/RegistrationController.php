@@ -18,7 +18,6 @@ class RegistrationController extends AbstractController
     #[Route('/register', name: 'register_index')]
     public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager): Response
     {
-        $user = new User();
         $registration = new Registration();
         $form = $this->createForm(RegistrationFormType::class, $registration);
         $form->handleRequest($request);
@@ -31,7 +30,7 @@ class RegistrationController extends AbstractController
             }
 
             if ($form->isValid()) {
-                // encode the plain password
+                $user = new User();
                 $user->setEmail($registration->getEmail());
                 $user->setPassword(
                     $userPasswordHasher->hashPassword(
@@ -42,10 +41,9 @@ class RegistrationController extends AbstractController
 
                 $entityManager->persist($user);
                 $entityManager->flush();
-                // do anything else you need here, like send an email
+
                 return $this->redirectToRoute('login_index');
             }
-
         }
 
         return $this->render('registration/register.html.twig', [
