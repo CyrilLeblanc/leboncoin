@@ -1,0 +1,24 @@
+{#
+    Header
+#}
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/header.css') }}">
+{% endblock %}
+
+<header>
+	<div class="left">
+		<a href="{{ path('index_index') }}"><img src="/public/img/logo.jpg" alt="logo"></a>
+	</div>
+	<div class="right">
+		<a class="button" href="{{ path('') }}">My research</a>
+		<a class="button" href="{{ path('') }}">Favorites</a>
+		<a class="button" href="{{ path('') }}">Messages</a>
+		{% if is_granted('ROLE_USER') %}
+			<a class="button" href="{{ path('') }}">Profile</a>
+			<a class="button" href="{{ path('logout_index') }}">Logout</a>
+		{% else %}
+			<a class="button" href="{{ path('login_index') }}">Login</a>
+            <a class="button" href="{{ path('register_index') }}">Register</a>
+		{% endif %}
+	</div>
+</header>
