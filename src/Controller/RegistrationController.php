@@ -35,8 +35,7 @@ class RegistrationController extends AbstractController
                     ->setPostcode($registration->getPostcode())
                     ->setNumber($registration->getNumber())
                     ->setCity($registration->getCity())
-                    ->setStreet($registration->getStreet())
-                    ->setIsMain(true);
+                    ->setStreet($registration->getStreet());
                 $entityManager->persist($address);
 
                 $user = (new User());
@@ -47,7 +46,7 @@ class RegistrationController extends AbstractController
                             $form->get('password')->getData()
                         )
                     )
-                    ->addAddress($address);
+                    ->setAddress($address);
 
                 $entityManager->persist($user);
                 $entityManager->flush();

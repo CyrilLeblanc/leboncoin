@@ -31,13 +31,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Post::class, orphanRemoval: true)]
     private $posts;
 
-    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Address::class)]
-    private $addresses;
+    #[ORM\Column(type: 'string', length: 255, unique: true)]
+    private $username;
+
+    #[ORM\Column(type: 'string', length: 20)]
+    private $phone;
+
+    #[ORM\OneToOne(targetEntity: Address::class, cascade: ['persist', 'remove'])]
+    private $address;
 
     public function __construct()
     {
         $this->posts = new ArrayCollection();
-        $this->addresses = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -140,32 +145,38 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /**
-     * @return Collection<int, Address>
-     */
-    public function getAddresses(): Collection
+    public function getUsername(): ?string
     {
-        return $this->addresses;
+        return $this->username;
     }
 
-    public function addAddress(Address $address): self
+    public function setUsername(string $username): self
     {
-        if (!$this->addresses->contains($address)) {
-            $this->addresses[] = $address;
-            $address->setUser($this);
-        }
+        $this->username = $username;
 
         return $this;
     }
 
-    public function removeAddress(Address $address): self
+    public function getPhone(): ?string
     {
-        if ($this->addresses->removeElement($address)) {
-            // set the owning side to null (unless already changed)
-            if ($address->getUser() === $this) {
-                $address->setUser(null);
-            }
-        }
+        return $this->phone;
+    }
+
+    public function setPhone(string $phone): self
+    {
+        $this->phone = $phone;
+
+        return $this;
+    }
+
+    public function getAddress(): ?Address
+    {
+        return $this->address;
+    }
+
+    public function setAddress(?Address $address): self
+    {
+        $this->address = $address;
 
         return $this;
     }

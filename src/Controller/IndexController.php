@@ -22,7 +22,7 @@ class IndexController extends AbstractController
         $researchForm = $this->createForm(ResearchType::class, $researchDto);
         $researchForm->handleRequest($request);
 
-        $posts = null;
+        $posts = [];
         if ($researchForm->isSubmitted() && $researchForm->isValid()) {
             
         } else {

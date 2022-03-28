@@ -1,15 +1,17 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-{{ form(research_form) }}
-<hr>
-{% for post in posts %}
-    <div class="post">
-        <h2>{{post.title}}</h2>
-        <h3>{{post.price}}€</h3>
-        <small>{{post.user.email}}</small>
-        <p>{{post.detail}}</p>
-    </div>
+	{{ form(research_form) }}
     <hr>
-{% endfor %}
+    {% for post in posts %}
+        <div class="post">
+            <h2>{{post.title}}</h2>
+            <h3>{{post.price}}€</h3>
+            <small>{{post.user.email}}</small>
+            <p>{{post.detail}}</p>
+        </div>
+        <hr>
+    {% else %}
+        <p>No results for this research</p>
+    {% endfor %}
 {% endblock %}

@@ -13,9 +13,6 @@ class Address
     #[ORM\Column(type: 'integer')]
     private $id;
 
-    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'addresses')]
-    private $user;
-
     #[ORM\Column(type: 'string', length: 255)]
     private $postcode;
 
@@ -28,24 +25,9 @@ class Address
     #[ORM\Column(type: 'string', length: 255)]
     private $street;
 
-    #[ORM\Column(type: 'boolean')]
-    private $isMain;
-
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getUser(): ?User
-    {
-        return $this->user;
-    }
-
-    public function setUser(?User $user): self
-    {
-        $this->user = $user;
-
-        return $this;
     }
 
     public function getPostcode(): ?string
@@ -92,18 +74,6 @@ class Address
     public function setNumber(int $number): self
     {
         $this->number = $number;
-
-        return $this;
-    }
-
-    public function getIsMain(): ?bool
-    {
-        return $this->isMain;
-    }
-
-    public function setIsMain(bool $isMain): self
-    {
-        $this->isMain = $isMain;
 
         return $this;
     }

@@ -40,6 +40,6 @@ body > .body {
 
 body > .body > section {
   width: 80%;
-  height: calc(100vh - 10rem);
+  min-height: calc(100vh - 10rem);
 }
 /*# sourceMappingURL=base.css.map */
