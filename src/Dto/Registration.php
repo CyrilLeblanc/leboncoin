@@ -4,6 +4,8 @@ namespace App\Dto;
 
 class Registration {
     private string $email;
+    private string $username;
+    private string $phone;
     private string $password;
     private string $confirmPassword;
     private int $postCode;
@@ -19,6 +21,28 @@ class Registration {
     public function setEmail(string $email): self
     {
         $this->email = $email;
+        return $this;
+    }
+
+    public function getUsername(): ?string
+    {
+        return $this->username;
+    }
+
+    public function setUsername(string $username): self
+    {
+        $this->username = $username;
+        return $this;
+    }
+
+    public function getPhone(): ?string
+    {
+        return $this->phone;
+    }
+
+    public function setPhone(string $phone): self
+    {
+        $this->phone = $phone;
         return $this;
     }
 

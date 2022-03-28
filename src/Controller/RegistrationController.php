@@ -40,6 +40,8 @@ class RegistrationController extends AbstractController
 
                 $user = (new User());
                 $user->setEmail($registration->getEmail())
+                    ->setUsername($registration->getUsername())
+                    ->setPhone($registration->getPhone())
                     ->setPassword(
                         $userPasswordHasher->hashPassword(
                             $user,
