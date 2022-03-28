@@ -42,9 +42,41 @@ class RegistrationFormType extends AbstractType
                     ]),
                 ],
             ])
+            ->add('postCode', null, [
+                'label' => 'Post code',
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'Please enter a post code',
+                    ]),
+                ],
+            ])
+            ->add('city', null, [
+                'label' => 'City',
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'Please enter a city',
+                    ]),
+                ],
+            ])
+            ->add('street', null, [
+                'label' => 'Street',
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'Please enter a street',
+                    ]),
+                ],
+            ])
+            ->add('number', null, [
+                'label' => 'House number',
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'Please enter a house number',
+                    ]),
+                ],
+            ])
             ->add('submit', SubmitType::class, [
                 'label' => 'Register',
-            ]);;
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
