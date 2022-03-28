@@ -1,0 +1,32 @@
+@import "./var/color";
+@import "./common/header";
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  height: 100vh;
+  font-size: 20px;
+
+  a {
+    color: $color-black;
+    text-decoration: none;
+    font-weight: 900;
+
+    &:hover {
+      cursor: pointer;
+    }
+  }
+
+  // LAYOUT
+
+  > .body{
+    display: flex;
+    justify-content: space-between;
+
+    > section{
+      width: 80%;
+      height: calc(100vh - 10rem);
+    }
+  }
+}
