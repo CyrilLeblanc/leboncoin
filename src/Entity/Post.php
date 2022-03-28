@@ -23,7 +23,7 @@ class Post
     #[ORM\Column(type: 'string', length: 255)]
     private $title;
 
-    #[ORM\ManyToOne(targetEntity: SubCategory::class, inversedBy: 'posts')]
+    #[ORM\ManyToOne(targetEntity: Category::class, inversedBy: 'posts')]
     private $category;
 
     #[ORM\Column(type: 'string', length: 2048)]
@@ -73,12 +73,12 @@ class Post
         return $this;
     }
 
-    public function getCategory(): ?SubCategory
+    public function getCategory(): ?Category
     {
         return $this->category;
     }
 
-    public function setCategory(?SubCategory $category): self
+    public function setCategory(?Category $category): self
     {
         $this->category = $category;
 

@@ -2,13 +2,12 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\SubCategory;
+use App\Entity\Category;
 use App\Entity\Post as PostEntity;
 use App\Entity\User as UserEntity;
 use Doctrine\Persistence\ObjectManager;
 use App\Entity\Address as AddressEntity;
 use Doctrine\Bundle\FixturesBundle\Fixture;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class User extends Fixture
 {
@@ -39,7 +38,7 @@ class User extends Fixture
                     ->setUser($user)
                     ->setPrice($faker->randomFloat(2, 0, 1000))
                     ->setPublicationDate($faker->dateTimeBetween('-1 years', 'now'))
-                    ->setCategory($faker->randomElement($manager->getRepository(SubCategory::class)->findAll()));
+                    ->setCategory($faker->randomElement($manager->getRepository(Category::class)->findAll()));
                 $manager->persist($post);
             }
         }

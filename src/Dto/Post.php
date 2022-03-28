@@ -2,11 +2,11 @@
 
 namespace App\Dto;
 
-use App\Entity\SubCategory;
+use App\Entity\Category;
 
 class Post{
     private string $title;
-    private SubCategory $category;
+    private Category $category;
     private float $price;
     private ?string $detail;
 
@@ -22,12 +22,12 @@ class Post{
         return $this;
     }
 
-    public function getCategory(): ?SubCategory
+    public function getCategory(): ?Category
     {
         return $this->category;
     }
 
-    public function setCategory(SubCategory $category): self
+    public function setCategory(Category $category): self
     {
         $this->category = $category;
 

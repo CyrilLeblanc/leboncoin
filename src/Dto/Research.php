@@ -2,24 +2,27 @@
 
 namespace App\Dto;
 
-use App\Entity\SubCategory;
+use App\Entity\Category;
 
 class Research
 {
-    private SubCategory $category;
-    private ?string $query;
-    private ?int $page;
-    private ?int $maxCost;
-    private ?int $minCost;
-    private ?int $postalCode;
-    private ?string $request;
+    private Category $category;
+    private ?string $query = '';
+    private ?int $page = 1;
+    private ?int $maxCost = 9999999;
+    private ?int $minCost = 0;
+    private ?string $postcode = '';
 
-    public function getCategory(): ?SubCategory
+    public function __construct(){
+
+    }
+
+    public function getCategory(): ?Category
     {
         return $this->category;
     }
 
-    public function setCategory(?SubCategory $category): self
+    public function setCategory(?Category $category): self
     {
         $this->category = $category;
         return $this;
@@ -69,25 +72,14 @@ class Research
         return $this;
     }
 
-    public function getPostalCode(): ?string
+    public function getPostcode(): ?string
     {
-        return $this->postalCode;
+        return $this->postcode;
     }
 
-    public function setPostalCode(?string $postalCode): self
+    public function setPostcode(?string $postcode): self
     {
-        $this->postalCode = $postalCode;
-        return $this;
-    }
-
-    public function getRequest(): ?string
-    {
-        return $this->request;
-    }
-
-    public function setRequest(?string $request): self
-    {
-        $this->request = $request;
+        $this->postcode = $postcode;
         return $this;
     }
 }

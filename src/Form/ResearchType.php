@@ -3,12 +3,12 @@
 namespace App\Form;
 
 use App\Dto\Research;
-use App\Entity\SubCategory;
+use App\Entity\Category;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\SearchType;
@@ -25,43 +25,38 @@ class ResearchType extends AbstractType
                 'empty_data' => 1,
             ])
             ->add('category', EntityType::class, [
-                'class' => SubCategory::class,
+                'class' => Category::class,
                 'choice_label' => 'name',
                 'label' => 'Category'
-            ])
-            ->add('request', ChoiceType::class, [
-                'label' => 'Request for ',
-                'choices' => [
-                    'demand' => 'Demand',
-                    'offer' => 'Offer',
-                ],
             ])
             ->add('query', SearchType::class, [
                 'label' => 'Search',
                 'required' => false,
-                'empty_data' => ''
+                'empty_data' => '',
             ])
             ->add('minCost', NumberType::class, [
                 'label' => 'Min cost',
                 'required' => false,
                 'html5' => true,
+                'empty_data' => $defaultMinCost,
                 'attr' => [
+                    'value' => $defaultMinCost,
                     'placeholder' => $defaultMinCost,
                     'min' => $defaultMinCost,
-                    'empty_data' => $defaultMinCost,
                 ],
             ])
             ->add('maxCost', NumberType::class, [
                 'label' => 'Max cost',
                 'required' => false,
                 'html5' => true,
+                'empty_data' => $defaultMaxCost,
                 'attr' => [
+                    'value' => $defaultMaxCost,
                     'placeholder' => $defaultMaxCost,
                     'min' => $defaultMinCost,
-                    'empty_data' => $defaultMaxCost,
                 ],
             ])
-            ->add('postalCode', NumberType::class, [
+            ->add('postcode', TextType::class, [
                 'label' => 'Postal Code',
                 'required' => false,
             ])

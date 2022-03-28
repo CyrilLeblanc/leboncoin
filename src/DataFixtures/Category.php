@@ -5,12 +5,11 @@ namespace App\DataFixtures;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use App\Entity\Category as CategoryEntity;
-use App\Entity\SubCategory as SubCategoryEntity;
 
 class Category extends Fixture
 {
-
     const CATEGORIES = [
+        'All' => [],
         'Vacations' => [
             'Travel',
             'Hotel',
@@ -70,15 +69,14 @@ class Category extends Fixture
 
     public function load(ObjectManager $manager): void
     {
-        foreach (self::CATEGORIES as $categoryName => $subCategoriesName) {
+        foreach (self::CATEGORIES as $categoryName => $subCategoryNames) {
             $category = new CategoryEntity();
             $category->setName($categoryName);
             $manager->persist($category);
 
-            foreach ($subCategoriesName as $subCategoryName) {
-                $subCategory = new SubCategoryEntity();
-                $subCategory->setName($subCategoryName);
-                $subCategory->setCategory($category);
+            foreach ($subCategoryNames as $subCategoryName) {
+                $subCategory = new CategoryEntity();
+                $subCategory->setName($categoryName . '/' . $subCategoryName);
                 $manager->persist($subCategory);
             }
         }

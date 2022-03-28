@@ -24,9 +24,15 @@ class IndexController extends AbstractController
 
         $posts = [];
         if ($researchForm->isSubmitted() && $researchForm->isValid()) {
-            
+            $posts = $postRepository->search(
+                $researchDto->getQuery(),
+                $researchDto->getCategory(),
+                $researchDto->getMinCost(),
+                $researchDto->getMaxCost(),
+                $researchDto->getPostcode()
+            );
         } else {
-            $posts = $postRepository->findAll();
+            $posts = $postRepository->search();
         }
 
         return $this->render('index/index.html.twig', [

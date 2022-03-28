@@ -3,10 +3,11 @@
 namespace App\Repository;
 
 use App\Entity\Post;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\ORM\OptimisticLockException;
+use App\Entity\Category;
 use Doctrine\ORM\ORMException;
+use Doctrine\ORM\OptimisticLockException;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @method Post|null find($id, $lockMode = null, $lockVersion = null)
@@ -45,6 +46,56 @@ class PostRepository extends ServiceEntityRepository
         }
     }
 
+    public function search(
+        string $title = null,
+        Category $category = null,
+        float $minPrice = null,
+        float $maxPrice = null,
+        int $postcode = null,
+    ) {
+        $query = $this->createQueryBuilder('p');
+
+        if ($title) {
+            $query->andWhere('p.title LIKE :query')
+                ->setParameter('query', '%' . $title . '%');
+        }
+
+        // handle subcategories
+        if ($category && $category->getName() !== 'All') {
+            $mainCategory = explode('/', $category->getName())[0];
+
+            if ($category->getName() !== $mainCategory) {
+                $query->andWhere('p.category = :category')
+                    ->setParameter('category', $category);
+            } else {
+                $query->leftJoin('p.category', 'c')
+                    ->andWhere('c.name LIKE :mainCategory')
+                    ->setParameter('mainCategory', explode('/', $mainCategory . '%'));
+            }
+        }
+
+        if ($minPrice) {
+            $query->andWhere('p.price >= :minPrice')
+                ->setParameter('minPrice', $minPrice);
+        }
+        if ($maxPrice) {
+            $query->andWhere('p.price <= :maxPrice')
+                ->setParameter('maxPrice', $maxPrice);
+        }
+
+        // handle postcode
+        if ($postcode) {
+            $query->leftJoin('p.user', 'u')
+                ->leftJoin('u.address', 'a')
+                ->andWhere('a.postcode LIKE :postcode')
+                ->setParameter('postcode', $postcode . '%');
+        }
+
+        return $query
+            ->orderBy('p.publicationDate', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
     // /**
     //  * @return Post[] Returns an array of Post objects
     //  */
