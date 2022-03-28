@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Entity\Address;
 use App\Dto\Registration;
 use App\Form\RegistrationFormType;
 use Symfony\Component\Form\FormError;
@@ -30,14 +31,23 @@ class RegistrationController extends AbstractController
             }
 
             if ($form->isValid()) {
-                $user = new User();
-                $user->setEmail($registration->getEmail());
-                $user->setPassword(
-                    $userPasswordHasher->hashPassword(
-                        $user,
-                        $form->get('password')->getData()
+                $address = (new Address())
+                    ->setPostcode($registration->getPostcode())
+                    ->setNumber($registration->getNumber())
+                    ->setCity($registration->getCity())
+                    ->setStreet($registration->getStreet())
+                    ->setIsMain(true);
+                $entityManager->persist($address);
+
+                $user = (new User());
+                $user->setEmail($registration->getEmail())
+                    ->setPassword(
+                        $userPasswordHasher->hashPassword(
+                            $user,
+                            $form->get('password')->getData()
+                        )
                     )
-                );
+                    ->addAddress($address);
 
                 $entityManager->persist($user);
                 $entityManager->flush();
