@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello ResearchController!{% endblock %}
+
+{% block body %}
+<h1>My Research</h1>
+<table>
+    <tr>
+        <th>Category</th>
+        <th>Query</th>
+        <th>min Price</th>
+        <th>max Price</th>
+        <th>Date time</th>
+        <th>Postcode</th>
+    </tr>
+    {% for research in researches %}
+        <tr>
+            <td>{{research.category.name}}</td>
+            <td>{{research.query}}</td>
+            <td>{{research.minPrice}}</td>
+            <td>{{research.maxPrice}}</td>
+            <td>{{research.dateTime|date("Y/m/d H:i:s")}}</td>
+            <td>{{research.postcode}}</td>
+            <td>
+                {% set form = formObject.createView() %}
+                {{ form_start(form) }}
+                {{ form_widget(form.query, { 'attr': {'value': research.query, 'hidden': 'hidden' }}) }}
+                {{ form_widget(form.minCost, { 'attr': {'value': research.minPrice, 'hidden': 'hidden' }}) }}
+                {{ form_widget(form.maxCost, { 'attr': {'value': research.maxPrice, 'hidden': 'hidden' }}) }}
+                {{ form_widget(form.category, { 'attr': {'value': research.category.id, 'hidden': 'hidden' }}) }}
+                {{ form_widget(form.postcode, { 'attr': {'value': research.postcode, 'hidden': 'hidden' }}) }}
+                {{ form_end(form) }}
+            </td>
+        </tr>
+    {% endfor %}
+</table>
+{% endblock %}

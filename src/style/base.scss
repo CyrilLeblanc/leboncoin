@@ -29,4 +29,9 @@ body {
       min-height: calc(100vh - 10rem);
     }
   }
+
+  table, th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+  }
 }

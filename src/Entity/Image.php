@@ -19,9 +19,6 @@ class Image
     #[ORM\ManyToOne(targetEntity: Post::class, inversedBy: 'images')]
     private $post;
 
-    #[ORM\Column(type: 'string', length: 5)]
-    private $extension;
-
     public function getId(): ?int
     {
         return $this->id;
@@ -51,21 +48,9 @@ class Image
         return $this;
     }
 
-    public function getExtension(): ?string
-    {
-        return $this->extension;
-    }
-
-    public function setExtension(string $extension): self
-    {
-        $this->extension = $extension;
-
-        return $this;
-    }
-
     public function getFileName(): string
     {
-        return $this->post->getId() . '-' . $this->rank . '.' . $this->extension;
+        return $this->post->getId() . '-' . $this->rank;
     }
 
     public function getPath(): string

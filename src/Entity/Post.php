@@ -148,4 +148,9 @@ class Post
 
         return $this;
     }
+
+    public function getThumbnailPath(): string
+    {
+        return '/img/posts/' . $this->getId() . '-0';
+    }
 }

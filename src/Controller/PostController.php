@@ -42,12 +42,11 @@ class PostController extends AbstractController
                 $rank = 0;
                 $imageEntity = (new Image())
                     ->setPost($post)
-                    ->setRank($rank)
-                    ->setExtension($imageFile->guessExtension());
+                    ->setRank($rank);
                 try {
                     $imageFile->move(
                         __DIR__ . '/../../public/img/posts/',
-                        $imageEntity->getPost()->getId() . '-' . $rank . '.' . $imageEntity->getExtension()
+                        $imageEntity->getPost()->getId() . '-' . $rank
                     );
                     $entityManager->persist($imageEntity);
                 } catch (FileException $e) {

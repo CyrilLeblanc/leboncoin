@@ -21,6 +21,7 @@ class ResearchType extends AbstractType
         $defaultMinCost = 0;
         $defaultMaxCost = 99999;
         $builder
+            ->setAction('/')
             ->add('page', HiddenType::class, [
                 'empty_data' => 1,
             ])
@@ -59,6 +60,7 @@ class ResearchType extends AbstractType
             ->add('postcode', TextType::class, [
                 'label' => 'Postal Code',
                 'required' => false,
+                'empty_data' => '',
             ])
             ->add('submit', SubmitType::class, [
                 'label' => 'Search'

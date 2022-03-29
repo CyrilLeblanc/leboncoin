@@ -51,7 +51,7 @@ class PostRepository extends ServiceEntityRepository
         Category $category = null,
         float $minPrice = null,
         float $maxPrice = null,
-        int $postcode = null,
+        string $postcode = null,
     ) {
         $query = $this->createQueryBuilder('p');
 

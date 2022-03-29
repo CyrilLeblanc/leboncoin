@@ -42,4 +42,9 @@ body > .body > section {
   width: 80%;
   min-height: calc(100vh - 10rem);
 }
+
+body table, body th, body td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
 /*# sourceMappingURL=base.css.map */

@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\CategoryRepository;
 use App\Entity\Post;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Collection;
 
@@ -20,6 +21,14 @@ class Category
 
     #[ORM\OneToMany(mappedBy: 'category', targetEntity: Post::class, orphanRemoval: true)]
     private $posts;
+
+    #[ORM\OneToMany(mappedBy: 'category', targetEntity: Research::class, orphanRemoval: true)]
+    private $research;
+
+    public function __construct()
+    {
+        $this->research = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -62,6 +71,36 @@ class Category
             // set the owning side to null (unless already changed)
             if ($post->getCategory() === $this) {
                 $post->setCategory(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Research>
+     */
+    public function getResearch(): Collection
+    {
+        return $this->research;
+    }
+
+    public function addResearch(Research $research): self
+    {
+        if (!$this->research->contains($research)) {
+            $this->research[] = $research;
+            $research->setCategory($this);
+        }
+
+        return $this;
+    }
+
+    public function removeResearch(Research $research): self
+    {
+        if ($this->research->removeElement($research)) {
+            // set the owning side to null (unless already changed)
+            if ($research->getCategory() === $this) {
+                $research->setCategory(null);
             }
         }
 
