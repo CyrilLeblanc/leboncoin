@@ -27,7 +27,7 @@
                 {{ form_widget(form.query, { 'attr': {'value': research.query, 'hidden': 'hidden' }}) }}
                 {{ form_widget(form.minCost, { 'attr': {'value': research.minPrice, 'hidden': 'hidden' }}) }}
                 {{ form_widget(form.maxCost, { 'attr': {'value': research.maxPrice, 'hidden': 'hidden' }}) }}
-                {{ form_widget(form.category, { 'attr': {'value': research.category.id, 'hidden': 'hidden' }}) }}
+                {{ form_widget(form.category, { 'value': research.category.id, 'attr': {'hidden': 'hidden' }}) }}
                 {{ form_widget(form.postcode, { 'attr': {'value': research.postcode, 'hidden': 'hidden' }}) }}
                 {{ form_end(form) }}
             </td>
