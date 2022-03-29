@@ -8,10 +8,6 @@
     <table>
         <tbody>
             <tr>
-                <th>Id</th>
-                <td>{{ post.id }}</td>
-            </tr>
-            <tr>
                 <th>Title</th>
                 <td>{{ post.title }}</td>
             </tr>
@@ -34,6 +30,16 @@
             <tr>
                 <th>City</th>
                 <td>{{ post.user.address.city }} ( {{post.user.address.postcode}} )</td>
+            </tr>
+            <tr>
+                <th>Images</th>
+                <td>
+                    {% for image in post.images %}
+                        <img src="{{ asset('img/posts/'~image.filename) }}">
+                    {% else %}
+                        No images
+                    {% endfor %}
+                </td>
             </tr>
         </tbody>
     </table>
