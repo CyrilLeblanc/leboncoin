@@ -39,13 +39,13 @@ class PostController extends AbstractController
         ]);
     }
 
-    #[Route('/post/{id}', name: 'post_show')]
+    #[Route('/post/view/{idPost}', name: 'post_view')]
     public function view(
-        int $id,
+        int $idPost,
         PostRepository $postRepository
     ): Response {
         return $this->render('post/view.html.twig', [
-            'post' => $postRepository->find($id)
+            'post' => $postRepository->find($idPost)
         ]);
     }
 }
