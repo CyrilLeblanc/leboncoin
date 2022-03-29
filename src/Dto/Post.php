@@ -9,6 +9,7 @@ class Post{
     private Category $category;
     private float $price;
     private ?string $detail;
+    private $image;
 
     public function getTitle(): ?string
     {
@@ -54,6 +55,18 @@ class Post{
     public function setDetail(?string $detail): self
     {
         $this->detail = $detail;
+
+        return $this;
+    }
+
+    public function getImage()
+    {
+        return $this->image;
+    }
+
+    public function setImage($image): self
+    {
+        $this->image = $image;
 
         return $this;
     }

@@ -7,11 +7,13 @@ use App\Entity\Category;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Validator\Constraints\File;
 
 class PostType extends AbstractType
 {
@@ -39,6 +41,25 @@ class PostType extends AbstractType
                 'attr' => [
                     'rows' => 10,
                     'cols' => 50
+                ]
+            ])
+            ->add('image', FileType::class, [
+                'required' => false,
+                'label' => 'Image (jpg, png, jpeg)',
+                'attr' => [
+                    'accept' => 'image/*'
+                ],
+                'constraints' => [
+                    new File([
+                        'maxSize' => '5M',
+                        'mimeTypes' => [
+                            'image/jpg',
+                            'image/jpeg',
+                            'image/png',
+                        ],
+                        'mimeTypesMessage' => 'Please upload a valid image (jpg, jpeg, png)',
+                        'sizeMessage' => 'The image is too large (max 5Mo)',
+                    ])
                 ]
             ])
             ->add('submit', SubmitType::class)
