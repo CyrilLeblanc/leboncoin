@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Post{% endblock %}
+
+{% block body %}
+<h1>Post View</h1>
+
+    <table>
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ post.id }}</td>
+            </tr>
+            <tr>
+                <th>Title</th>
+                <td>{{ post.title }}</td>
+            </tr>
+            <tr>
+                <th>Price</th>
+                <td>{{ post.price }}€</td>
+            </tr>
+            <tr>
+                <th>Created</th>
+                <td>{{ post.publicationDate|date("d/m/Y") }}</td>
+            </tr>
+            <tr>
+                <th>Content</th>
+                <td>{{ post.detail }}</td>
+            </tr>
+            <tr>
+                <th>User</th>
+                <td>{{ post.user.username|upper }}</td>
+            </tr>
+            <tr>
+                <th>City</th>
+                <td>{{ post.user.address.city }} ( {{post.user.address.postcode}} )</td>
+            </tr>
+        </tbody>
+    </table>
+
+{% endblock %}
