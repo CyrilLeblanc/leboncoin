@@ -19,8 +19,7 @@ class IndexController extends AbstractController
     public function index(
         Request $request,
         PostRepository $postRepository,
-        EntityManagerInterface $entityManager,
-        CategoryRepository $categoryRepository
+        EntityManagerInterface $entityManager
     ): Response {
         $researchDto = new Research();
         $researchForm = $this->createForm(ResearchType::class, $researchDto);
@@ -55,7 +54,8 @@ class IndexController extends AbstractController
 
         return $this->render('index/index.html.twig', [
             'research_form' => $researchForm->createView(),
-            'posts' => $posts
+            'posts' => $posts,
+            'user' => $this->getUser()
         ]);
     }
 

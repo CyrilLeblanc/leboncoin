@@ -16,6 +16,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class PostController extends AbstractController
 {
@@ -74,7 +75,45 @@ class PostController extends AbstractController
         $post = $postRepository->findOneBy(['id' => $idPost]);
         return $this->render('post/view.html.twig', [
             'post' => $post,
+            'owner' => $this->getUser() == $post->getUser(),
             'isFavorite' => $favoriteRepository->findOneBy(['post' => $post, 'user' => $this->getUser()])
         ]);
+    }
+
+    #[Route('/post/edit/{idPost}', name: 'post_edit')]
+    public function edit(
+        int $idPost,
+        PostRepository $postRepository,
+        Request $request, 
+        EntityManagerInterface $entityManager
+    ) {
+        $post = $postRepository->findOneBy(['id' => $idPost]);
+        if ($post->getUser() !== $this->getUser()) {
+            return $this->redirectToRoute('post_view', ['idPost' => $idPost]);
+        } else {
+            $postDto = (new PostDto())
+                ->setTitle($post->getTitle())
+                ->setCategory($post->getCategory())
+                ->setPrice($post->getPrice())
+                ->setDetail($post->getDetail());
+            $postForm = $this->createForm(PostType::class, $postDto);
+            $postForm->handleRequest($request);
+            if ($postForm->isSubmitted() && $postForm->isValid()) {
+                $post->setTitle($postDto->getTitle())
+                    ->setCategory($postDto->getCategory())
+                    ->setPrice($postDto->getPrice())
+                    ->setDetail($postDto->getDetail());
+                $entityManager->persist($post);
+                $entityManager->flush();
+                return $this->redirectToRoute('post_view', ['idPost' => $post->getId()]);
+            } else {
+                return $this->render('post/edit.html.twig', [
+                    'postForm' => $postForm->createView(),
+                    'post' => $post
+                ]);
+            }
+        }
+
+        return $this->redirectToRoute('post_view', ['idPost' => $idPost]);
     }
 }

@@ -1,0 +1,17 @@
+{% for post in posts %}
+    <div class="post">
+        <img src="{{ post.getThumbnailPath() }}" alt="">
+        {% if user.id == post.user.id %}
+            <a href="{{ path('post_edit', {'idPost': post.id}) }}">Edit</a>
+        {% endif %}
+        <h2>
+            <a href="{{path('post_view', {idPost: post.id})}}">{{post.title}}</a>
+        </h2>
+        <h3>{{post.price}}€</h3>
+        <small><a href="{{ path('profile_user', {'idUser': post.user.id}) }}">{{post.user.username}}</a></small>
+        <p>{{post.detail}}</p>
+    </div>
+    <hr>
+{% else %}
+    <p>No results for this research</p>
+{% endfor %}

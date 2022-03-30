@@ -43,7 +43,10 @@
             </tr>
         </tbody>
     </table>
-
+    {% if owner %}
+        <a href="{{ path('post_edit', {'idPost': post.id}) }}">Edit</a>
+        <br>
+    {% endif %}
     <a href="{{ path('favorite_toggle', {'idPost': post.id}) }}">
         {% if isFavorite %}
             Remove from favorites
