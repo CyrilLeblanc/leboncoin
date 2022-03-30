@@ -18,7 +18,7 @@ class FavoriteController extends AbstractController
     public function index(
         FavoriteRepository $favoriteRepository
     ): Response {
-        $favorites = $favoriteRepository->findBy([], ['createdAt' => 'DESC']);
+        $favorites = $favoriteRepository->findBy(['user' => $this->getUser()], ['createdAt' => 'DESC']);
         return $this->render('favorite/index.html.twig', [
             'favorites' => $favorites,
         ]);        
