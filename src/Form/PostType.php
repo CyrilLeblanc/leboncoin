@@ -58,7 +58,6 @@ class PostType extends AbstractType
                             'image/png',
                         ],
                         'mimeTypesMessage' => 'Please upload a valid image (jpg, jpeg, png)',
-                        'sizeMessage' => 'The image is too large (max 5Mo)',
                     ])
                 ]
             ])

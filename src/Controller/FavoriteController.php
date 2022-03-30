@@ -2,11 +2,11 @@
 
 namespace App\Controller;
 
-use App\Entity\Favorite as FavoriteEntity;
 use App\Repository\PostRepository;
 use App\Repository\FavoriteRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\HttpFoundation\Request;
+use App\Entity\Favorite as FavoriteEntity;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -15,16 +15,18 @@ class FavoriteController extends AbstractController
 {
 
     #[Route('/favorite', name: 'favorite_index')]
-    public function index(): RedirectResponse
-    {
-        return $this->redirectToRoute('index_index');
+    public function index(
+        FavoriteRepository $favoriteRepository
+    ): Response {
+        $favorites = $favoriteRepository->findBy([], ['createdAt' => 'DESC']);
+        return $this->render('favorite/index.html.twig', [
+            'favorites' => $favorites,
+        ]);        
     }
-
 
     #[Route('/favorite/toggle/{idPost}', name: 'favorite_toggle')]
     public function toggle(
         int $idPost,
-        Request $request,
         PostRepository $postRepository,
         FavoriteRepository $favoriteRepository,
         EntityManagerInterface $entityManager
