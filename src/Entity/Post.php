@@ -187,4 +187,9 @@ class Post
 
         return $this;
     }
+
+    public function getFavoriteCount(): int
+    {
+        return $this->favorites->count();
+    }
 }

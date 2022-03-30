@@ -1,12 +1,22 @@
 {% for post in posts %}
     <div class="post">
         <img src="{{ post.getThumbnailPath() }}" alt="">
+        <br>
         {% if current_user == post.user %}
             <a href="{{ path('post_edit', {'idPost': post.id}) }}">Edit</a>
         {% endif %}
+        <br>
+        <a href="{{ path('favorite_toggle', {'idPost': post.id}) }}">
+        {% if current_user.isFavorite(post) %}
+            Remove from favorites
+        {% else %}
+            Add to favorites
+        {% endif %}
+    </a>
         <h2>
             <a href="{{path('post_view', {idPost: post.id})}}">{{post.title}}</a>
         </h2>
+        <p>Fav count: <b>{{post.getFavoriteCount()}}</b></p>
         <h3>{{post.price}}€</h3>
         <small><a href="{{ path('profile_user', {'idUser': post.user.id}) }}">{{post.user.username}}</a></small>
         <p>{{post.detail}}</p>
