@@ -44,4 +44,12 @@
         </tbody>
     </table>
 
+    <a href="{{ path('favorite_toggle', {'idPost': post.id}) }}">
+        {% if isFavorite %}
+            Remove from favorites
+        {% else %}
+            Add to favorites
+        {% endif %}
+    </a>
+
 {% endblock %}

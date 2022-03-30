@@ -3,9 +3,12 @@
 namespace App\Controller;
 
 use App\Entity\Post;
-use App\Form\PostType;
-use App\Dto\Post as PostDto;
+use App\Dto\Favorite;
 use App\Entity\Image;
+use App\Form\PostType;
+use App\Form\FavoriteType;
+use App\Dto\Post as PostDto;
+use App\Repository\FavoriteRepository;
 use App\Repository\PostRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -65,10 +68,13 @@ class PostController extends AbstractController
     #[Route('/post/view/{idPost}', name: 'post_view')]
     public function view(
         int $idPost,
-        PostRepository $postRepository
+        PostRepository $postRepository,
+        FavoriteRepository $favoriteRepository
     ): Response {
+        $post = $postRepository->findOneBy(['id' => $idPost]);
         return $this->render('post/view.html.twig', [
-            'post' => $postRepository->find($idPost)
+            'post' => $post,
+            'isFavorite' => $favoriteRepository->findOneBy(['post' => $post, 'user' => $this->getUser()])
         ]);
     }
 }
