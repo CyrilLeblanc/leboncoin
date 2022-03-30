@@ -6,7 +6,6 @@ use App\Entity\Post;
 use App\Dto\Favorite;
 use App\Entity\Image;
 use App\Form\PostType;
-use App\Form\FavoriteType;
 use App\Dto\Post as PostDto;
 use App\Repository\FavoriteRepository;
 use App\Repository\PostRepository;
@@ -16,7 +15,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class PostController extends AbstractController
 {
@@ -115,5 +113,27 @@ class PostController extends AbstractController
         }
 
         return $this->redirectToRoute('post_view', ['idPost' => $idPost]);
+    }
+
+    #[Route('post/delete/{idPost}', name: 'post_delete')]
+    public function delete(
+        int $idPost,
+        PostRepository $postRepository,
+        EntityManagerInterface $entityManager
+    ) {
+        $post = $postRepository->findOneBy(['id' => $idPost]);
+        if ($post->getUser() !== $this->getUser()) {
+            return $this->redirectToRoute('post_view', ['idPost' => $idPost]);
+        } else {
+            foreach($post->getImages() as $image){
+                $entityManager->remove($image);
+            }
+            foreach($post->getFavorites() as $favorite){
+                $entityManager->remove($favorite);
+            }
+            $entityManager->remove($post);
+            $entityManager->flush();
+            return $this->redirectToRoute('index_index');
+        }
     }
 }
