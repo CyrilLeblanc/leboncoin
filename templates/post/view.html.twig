@@ -25,7 +25,7 @@
             </tr>
             <tr>
                 <th>User</th>
-                <td>{{ post.user.username|upper }}</td>
+                <td><a href="{{path('profile_user', { 'idUser': post.user.id })}}">{{ post.user.username|upper }}</a></td>
             </tr>
             <tr>
                 <th>City</th>

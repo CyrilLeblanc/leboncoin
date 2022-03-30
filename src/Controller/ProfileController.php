@@ -19,7 +19,7 @@ class ProfileController extends AbstractController
         $user = $userRepository->find($idUser);
 
         return $this->render('profile/index.html.twig', [
-            'owner' => $this->getUser() == $user,
+            'current_user' => $this->getUser(),
             'user' => $user,
             'address' => $user->getAddress(),
             'posts' => $user->getPosts()

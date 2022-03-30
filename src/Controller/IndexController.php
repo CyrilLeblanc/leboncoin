@@ -5,7 +5,6 @@ namespace App\Controller;
 use App\Dto\Research;
 use App\Entity\Research as ResearchEntity;
 use App\Form\ResearchType;
-use App\Repository\CategoryRepository;
 use Symfony\Component\HttpFoundation\Request;
 use App\Repository\PostRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -55,7 +54,7 @@ class IndexController extends AbstractController
         return $this->render('index/index.html.twig', [
             'research_form' => $researchForm->createView(),
             'posts' => $posts,
-            'user' => $this->getUser()
+            'current_user' => $this->getUser(),
         ]);
     }
 

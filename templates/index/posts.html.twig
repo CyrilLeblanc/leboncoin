@@ -1,7 +1,7 @@
 {% for post in posts %}
     <div class="post">
         <img src="{{ post.getThumbnailPath() }}" alt="">
-        {% if user.id == post.user.id %}
+        {% if current_user == post.user %}
             <a href="{{ path('post_edit', {'idPost': post.id}) }}">Edit</a>
         {% endif %}
         <h2>
