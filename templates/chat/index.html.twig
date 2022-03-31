@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	{{title}}
+{% endblock %}
+
+{% block body %}
+	<h1>{{title}}</h1>
+    <div class="chats">
+        <div class="seller chats">
+            {% for chat in buyerChats %}
+                <h2>{{chat.post.title}}</h2>
+                <img src="{{chat.post.image.path.getFileName()}}">
+            {% endfor %}
+        </div>
+        <div class="buyer chats">
+            {% for chat in sellerChats %}
+                
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

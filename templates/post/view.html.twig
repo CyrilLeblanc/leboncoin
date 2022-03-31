@@ -46,6 +46,9 @@
     {% if owner %}
         <a href="{{ path('post_edit', {'idPost': post.id}) }}">Edit</a>
         <br>
+    {% else %}
+        <a href="{{path('chat_post', { 'idPost': post.id })}}">start a chat</a>
+        <br>
     {% endif %}
     <a href="{{ path('favorite_toggle', {'idPost': post.id}) }}">
         {% if isFavorite %}

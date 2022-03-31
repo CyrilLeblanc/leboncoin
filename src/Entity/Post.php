@@ -40,10 +40,14 @@ class Post
     #[ORM\OneToMany(mappedBy: 'post', targetEntity: Favorite::class, orphanRemoval: true)]
     private $favorites;
 
+    #[ORM\OneToMany(mappedBy: 'post', targetEntity: Chat::class, orphanRemoval: true)]
+    private $chats;
+
     public function __construct()
     {
         $this->images = new ArrayCollection();
         $this->favorites = new ArrayCollection();
+        $this->chats = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -191,5 +195,35 @@ class Post
     public function getFavoriteCount(): int
     {
         return $this->favorites->count();
+    }
+
+    /**
+     * @return Collection<int, Chat>
+     */
+    public function getChats(): Collection
+    {
+        return $this->chats;
+    }
+
+    public function addChat(Chat $chat): self
+    {
+        if (!$this->chats->contains($chat)) {
+            $this->chats[] = $chat;
+            $chat->setPost($this);
+        }
+
+        return $this;
+    }
+
+    public function removeChat(Chat $chat): self
+    {
+        if ($this->chats->removeElement($chat)) {
+            // set the owning side to null (unless already changed)
+            if ($chat->getPost() === $this) {
+                $chat->setPost(null);
+            }
+        }
+
+        return $this;
     }
 }

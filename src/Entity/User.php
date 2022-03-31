@@ -47,11 +47,23 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Favorite::class, orphanRemoval: true)]
     private $favorites;
 
+    #[ORM\OneToMany(mappedBy: 'sender', targetEntity: Message::class, orphanRemoval: true)]
+    private $messages;
+
+    #[ORM\OneToMany(mappedBy: 'seller', targetEntity: Chat::class)]
+    private $sellerChats;
+
+    #[ORM\OneToMany(mappedBy: 'buyer', targetEntity: Chat::class, orphanRemoval: true)]
+    private $buyerChats;
+
     public function __construct()
     {
         $this->posts = new ArrayCollection();
         $this->research = new ArrayCollection();
         $this->favorites = new ArrayCollection();
+        $this->messages = new ArrayCollection();
+        $this->sellerChats = new ArrayCollection();
+        $this->buyerChats = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -259,5 +271,95 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         }
 
         return false;
+    }
+
+    /**
+     * @return Collection<int, Message>
+     */
+    public function getMessages(): Collection
+    {
+        return $this->messages;
+    }
+
+    public function addMessage(Message $message): self
+    {
+        if (!$this->messages->contains($message)) {
+            $this->messages[] = $message;
+            $message->setSender($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMessage(Message $message): self
+    {
+        if ($this->messages->removeElement($message)) {
+            // set the owning side to null (unless already changed)
+            if ($message->getSender() === $this) {
+                $message->setSender(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Chat>
+     */
+    public function getSellerChats(): Collection
+    {
+        return $this->sellerChats;
+    }
+
+    public function addSellerChat(Chat $sellerChat): self
+    {
+        if (!$this->sellerChats->contains($sellerChat)) {
+            $this->sellerChats[] = $sellerChat;
+            $sellerChat->setSeller($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSellerChat(Chat $sellerChat): self
+    {
+        if ($this->sellerChats->removeElement($sellerChat)) {
+            // set the owning side to null (unless already changed)
+            if ($sellerChat->getSeller() === $this) {
+                $sellerChat->setSeller(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Chat>
+     */
+    public function getBuyerChats(): Collection
+    {
+        return $this->buyerChats;
+    }
+
+    public function addBuyerChat(Chat $buyerChat): self
+    {
+        if (!$this->buyerChats->contains($buyerChat)) {
+            $this->buyerChats[] = $buyerChat;
+            $buyerChat->setBuyer($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBuyerChat(Chat $buyerChat): self
+    {
+        if ($this->buyerChats->removeElement($buyerChat)) {
+            // set the owning side to null (unless already changed)
+            if ($buyerChat->getBuyer() === $this) {
+                $buyerChat->setBuyer(null);
+            }
+        }
+
+        return $this;
     }
 }
