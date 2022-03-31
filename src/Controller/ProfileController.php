@@ -38,14 +38,13 @@ class ProfileController extends AbstractController
         Request $request,
         UserPasswordHasherInterface $hasher
     ): Response {
-        $profile = new Profile($this->getUser());
+        /** @var \App\Entity\User $user */
+        $user = $this->getUser();
+        $profile = new Profile($user);
         $form = $this->createForm(ProfileType::class, $profile);
         $form->handleRequest($request);
 
         if ($form->isSubmitted()) {
-
-            /** @var \App\Entity\User $user */
-            $user = $this->getUser();
 
             if ($hasher->isPasswordValid($user, $profile->getCurrentPassword())) {
                 if ($profile->getNewPassword()) {
@@ -65,13 +64,14 @@ class ProfileController extends AbstractController
                 $address = $user->getAddress();
                 $address
                     ->setCity($profile->getCity())
-                    ->setPostcode($profile->getPostcode());
+                    ->setPostcode($profile->getPostcode())
+                    ->setStreet($profile->getStreet())
+                    ->setNumber($profile->getNumber());
                 $this->entityManager->persist($user);
                 $this->entityManager->persist($address);
                 $this->entityManager->flush();
                 return $this->redirectToRoute('profile_index');
             }
-
         }
 
         return $this->render('profile/edit.html.twig', [

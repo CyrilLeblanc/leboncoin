@@ -15,6 +15,8 @@ class Profile
 
     #[Assert\Regex( pattern: '/^[0-9]{5}$/', message: 'Postcode must be in format XXXXX')]
     private int $postcode;
+    private string $street;
+    private int $number;
     private string $phone;
     private ?string $currentPassword;
 
@@ -30,6 +32,8 @@ class Profile
         $address = $user->getAddress(); 
         $this->city = $address->getCity();
         $this->postcode = $address->getPostcode();
+        $this->street = $address->getStreet();
+        $this->number = $address->getNumber();
     }
 
     public function getUsername(): ?string
@@ -117,6 +121,28 @@ class Profile
     public function setNewPasswordConfirmation(string $newPasswordConfirmation): self
     {
         $this->newPasswordConfirmation = $newPasswordConfirmation;
+        return $this;
+    }
+
+    public function getStreet(): ?string
+    {
+        return $this->street;
+    }
+
+    public function setStreet(string $street): self
+    {
+        $this->street = $street;
+        return $this;
+    }
+
+    public function getNumber(): ?int
+    {
+        return $this->number;
+    }
+
+    public function setNumber(int $number): self
+    {
+        $this->number = $number;
         return $this;
     }
 }
