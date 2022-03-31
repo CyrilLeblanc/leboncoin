@@ -6,13 +6,15 @@
             <a href="{{ path('post_edit', {'idPost': post.id}) }}">Edit</a>
         {% endif %}
         <br>
-        <a href="{{ path('favorite_toggle', {'idPost': post.id}) }}">
-        {% if current_user.isFavorite(post) %}
-            Remove from favorites
-        {% else %}
-            Add to favorites
+        {% if current_user %}
+            <a href="{{ path('favorite_toggle', {'idPost': post.id}) }}">
+                {% if current_user.isFavorite(post) %}
+                    Remove from favorites
+                {% else %}
+                    Add to favorites
+                {% endif %}
+            </a>
         {% endif %}
-    </a>
         <h2>
             <a href="{{path('post_view', {idPost: post.id})}}">{{post.title}}</a>
         </h2>
