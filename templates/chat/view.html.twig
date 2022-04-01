@@ -8,5 +8,9 @@
             {{message.content}}
         </p>
     {% endfor %}
-    {{ form(form) }}
+    {{ form_start(form) }}
+    <div style="display: none;">
+        {{ form_widget(form.chat) }}
+    </div>
+    {{ form_end(form) }}
 {% endblock %}
