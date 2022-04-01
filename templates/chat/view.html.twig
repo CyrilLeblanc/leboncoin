@@ -7,7 +7,7 @@
 {% block body %}
 	<h1>{{title}}</h1>
     {% for message in chat.messages %}
-        <p><b>{{message.sender.username}}: </b>{{message.content}}</p>
+        <p><small>{{message.timestamp|date("Y/m/d H:i:s")}}</small><b>{{message.sender.username}}: </b>{{message.content}}</p>
     {% endfor %}
     {{ form(form) }}
 {% endblock %}

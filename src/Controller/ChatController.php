@@ -84,12 +84,13 @@ class ChatController extends AbstractController
         Request $request
     ): RedirectResponse {
         $dto = new MessageDto();
-        $form = $this->createForm(MessageType::class, $dto)
+        $this->createForm(MessageType::class, $dto)
             ->handleRequest($request);
         $message = (new Message())
             ->setContent($dto->getContent())
             ->setChat($dto->getChat())
-            ->setSender($this->getUser());
+            ->setSender($this->getUser())
+            ->setTimestamp(new \DateTime());
         $this->entityManager->persist($message);
         $this->entityManager->flush();
 
