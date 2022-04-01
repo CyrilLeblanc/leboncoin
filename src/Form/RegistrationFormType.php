@@ -82,6 +82,9 @@ class RegistrationFormType extends AbstractType
             ])
             ->add('submit', SubmitType::class, [
                 'label' => 'Register',
+                'attr' => [
+                    'class' => 'btn btn-primary'
+                ]
             ]);
     }
 
