@@ -14,6 +14,8 @@
                 <img src="{{chat.post.images[0].path}}" height="100" width="100">
                 <label>{{chat.post.title}}</label>
                 <hr>
+            {% else %}
+                <p>No chats in sellers section.</p>
             {% endfor %}
         </div>
         <h2>Buyers</h2>
@@ -23,6 +25,8 @@
                 <img src="{{chat.post.images[0].path}}" height="100" width="100">
                 <label>{{chat.post.title}}</label>
                 <hr>
+            {% else %}
+                <p>No chats in buyers section.</p>
             {% endfor %}
         </div>
     </div>
