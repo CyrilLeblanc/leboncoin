@@ -18,7 +18,7 @@ class MessageType extends AbstractType
         $builder
             ->setAction('/chat/send')
             ->add('content', TextareaType::class)
-            ->add('Chat', EntityType::class, [
+            ->add('chat', EntityType::class, [
                 'class' => Chat::class,
                 'choice_label' => 'id',
             ])

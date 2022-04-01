@@ -6,7 +6,7 @@ use App\Entity\Chat as EntityChat;
 
 class Message {
     private string $content;
-    private EntityChat $Chat;
+    private EntityChat $chat;
 
     public function getContent(): string {
         return $this->content;
@@ -19,11 +19,11 @@ class Message {
     }
 
     public function getChat(): EntityChat {
-        return $this->Chat;
+        return $this->chat;
     }
 
-    public function setChat(EntityChat $Chat): self {
-        $this->Chat = $Chat;
+    public function setChat(EntityChat $chat): self {
+        $this->chat = $chat;
 
         return $this;
     }
