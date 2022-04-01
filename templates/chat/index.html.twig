@@ -9,8 +9,10 @@
     <div class="chats">
         <div class="seller chats">
             {% for chat in buyerChats %}
-                <h2>{{chat.post.title}}</h2>
-                <img src="{{chat.post.image.path.getFileName()}}">
+                <a href="{{path('chat_view', {'idChat': chat.id})}}">{{chat.seller.username}}</a>
+                <img src="{{chat.post.images[0].path}}" height="100" width="100">
+                <label>{{chat.post.title}}</label>
+                <hr>
             {% endfor %}
         </div>
         <div class="buyer chats">

@@ -67,8 +67,8 @@ class ChatController extends AbstractController
             ]);
         } else {
             $chat = (new Chat())
-                ->setBuyer($post->getUser())
-                ->setSeller($this->getUser())
+                ->setBuyer($this->getUser())
+                ->setSeller($post->getUser())
                 ->setPost($post);
             $this->entityManager->persist($chat);
             $this->entityManager->flush();
@@ -92,7 +92,7 @@ class ChatController extends AbstractController
             ->setSender($this->getUser());
         $this->entityManager->persist($message);
         $this->entityManager->flush();
-        
+
         return $this->redirectToRoute('chat_view', [
             'idChat' => $dto->getChat()->getId(),
         ]);
