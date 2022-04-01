@@ -22,11 +22,7 @@ class MessageType extends AbstractType
                 'class' => Chat::class,
                 'choice_label' => 'id',
             ])
-            ->add('submit', SubmitType::class, [
-                'attr' => [
-                    'class' => 'btn btn-primary'
-                ]
-            ])
+            ->add('submit', SubmitType::class)
         ;
     }
 

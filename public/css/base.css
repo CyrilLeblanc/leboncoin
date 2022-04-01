@@ -17,6 +17,12 @@ body {
   font-family: Arial, Helvetica, sans-serif;
   height: 100vh;
   font-size: 20px;
+  /*   table,
+  th,
+  td {
+    border: 1px solid black;
+    border-collapse: collapse;
+  } */
 }
 
 body a {
@@ -39,12 +45,27 @@ body > .body {
 }
 
 body > .body > section {
+  -ms-flex-item-align: center;
+      -ms-grid-row-align: center;
+      align-self: center;
+  margin-right: 10rem;
   width: 80%;
   min-height: calc(100vh - 10rem);
 }
 
-body table, body th, body td {
-  border: 1px solid black;
-  border-collapse: collapse;
+body .post-container .post.card {
+  display: inline-block;
+  width: 15rem;
+}
+
+body .post-container .post.card .card-img-top {
+  height: 18rem;
+  max-width: 18rem;
+}
+
+body .post-container .post.card .card-body .detail {
+  padding: 1rem;
+  height: 10rem;
+  overflow: auto;
 }
 /*# sourceMappingURL=base.css.map */

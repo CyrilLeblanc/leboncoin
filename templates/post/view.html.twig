@@ -1,56 +1,35 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <table>
-        <tbody>
-            <tr>
-                <th>Title</th>
-                <td>{{ post.title }}</td>
-            </tr>
-            <tr>
-                <th>Price</th>
-                <td>{{ post.price }}€</td>
-            </tr>
-            <tr>
-                <th>Created</th>
-                <td>{{ post.publicationDate|date("d/m/Y") }}</td>
-            </tr>
-            <tr>
-                <th>Content</th>
-                <td>{{ post.detail }}</td>
-            </tr>
-            <tr>
-                <th>User</th>
-                <td><a href="{{path('profile_user', { 'idUser': post.user.id })}}">{{ post.user.username|upper }}</a></td>
-            </tr>
-            <tr>
-                <th>City</th>
-                <td>{{ post.user.address.city }} ( {{post.user.address.postcode}} )</td>
-            </tr>
-            <tr>
-                <th>Images</th>
-                <td>
-                    {% for image in post.images %}
-                        <img src="{{ asset('img/posts/'~image.filename) }}">
-                    {% else %}
-                        No images
-                    {% endfor %}
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    {% if isOwner %}
-        <a href="{{ path('post_edit', {'idPost': post.id}) }}">Edit</a>
-        <br>
-    {% else %}
-        <a href="{{path('chat_post', { 'idPost': post.id })}}">start a chat</a>
-        <br>
-    {% endif %}
-    <a href="{{ path('favorite_toggle', {'idPost': post.id}) }}">
-        {% if isFavorite %}
-            Remove from favorites
-        {% else %}
-            Add to favorites
-        {% endif %}
-    </a>
+	
+	{% for image in post.images %}
+		<img src="{{ asset('img/posts/'~image.filename) }}">
+	{% else %}
+		No images
+	{% endfor %}
+    <p>
+
+	<a href="{{path('profile_user', { 'idUser': post.user.id })}}">{{ post.user.username|upper }}</a>
+	    <b>{{ post.price }}€</b><br>
+	    {{ post.user.address.city }} ({{post.user.address.postcode}})<br>
+	    <small>publish date: {{ post.publicationDate|date("d/m/Y") }}</small> 
+        {{ post.detail }}
+    </p>
+    <br>
+
+	{% if isOwner %}
+		<a href="{{ path('post_edit', {'idPost': post.id}) }}">Edit</a>
+		<br>
+	{% else %}
+		<a href="{{path('chat_post', { 'idPost': post.id })}}" class="btn">start a chat</a>
+		<br>
+	{% endif %}
+	<a href="{{ path('favorite_toggle', {'idPost': post.id}) }}" class="btn">
+		{% if isFavorite %}
+			Remove from favorites
+		{% else %}
+			Add to favorites
+		{% endif %}
+	</a>
+    
 {% endblock %}

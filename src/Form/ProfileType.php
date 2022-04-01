@@ -31,11 +31,7 @@ class ProfileType extends AbstractType
             ->add('newPasswordConfirmation', PasswordType::class, [
                 'required' => false,
             ])
-            ->add('submit', SubmitType::class, [
-                'attr' => [
-                    'class' => 'btn btn-primary'
-                ]
-            ]);
+            ->add('submit', SubmitType::class);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

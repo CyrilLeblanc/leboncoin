@@ -20,18 +20,40 @@ body {
 
   // LAYOUT
 
-  > .body{
+  > .body {
     display: flex;
     justify-content: space-between;
 
-    > section{
+    > section {
+      align-self: center;
+      margin-right: 10rem;
       width: 80%;
       min-height: calc(100vh - 10rem);
     }
   }
 
-  table, th, td {
+/*   table,
+  th,
+  td {
     border: 1px solid black;
     border-collapse: collapse;
+  } */
+
+  .post-container {
+    .post.card {
+      display: inline-block;
+
+      width: 15rem;
+      .card-img-top {
+        height: 18rem;
+        max-width: 18rem;
+      }
+
+      .card-body .detail {
+        padding: 1rem;
+        height: 10rem;
+        overflow: auto;
+      }
+    }
   }
 }
