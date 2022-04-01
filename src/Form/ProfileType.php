@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Dto\Profile;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -16,7 +17,7 @@ class ProfileType extends AbstractType
     {
         $builder
             ->add('username')
-            ->add('email')
+            ->add('email', EmailType::class)
             ->add('city')
             ->add('street')
             ->add('number', NumberType::class)

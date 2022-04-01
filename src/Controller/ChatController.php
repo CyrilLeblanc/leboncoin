@@ -18,6 +18,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 /** @method \App\Entity\User getUser() */
+#[Route('/chat')]
 class ChatController extends AbstractController
 {
     public function __construct(
@@ -28,17 +29,23 @@ class ChatController extends AbstractController
     ) {
     }
 
-    #[Route('/chat', name: 'chat_index')]
+    /**
+     * route that show the list of chats
+     */
+    #[Route('/', name: 'chat_index')]
     public function index(): Response
     {
         return $this->render('chat/index.html.twig', [
-            'title' => 'My Chats',
+            'title' => 'Chats',
             'buyerChats' => $this->getUser()->getBuyerChats(),
             'sellerChats' => $this->getUser()->getSellerChats()
         ]);
     }
 
-    #[Route('/chat/post/{idPost}', name: 'chat_post')]
+    /**
+     * route that redirect to corresponding route to chat depending on current user
+     */
+    #[Route('/post/{idPost}', name: 'chat_post')]
     public function find(
         int $idPost
     ): RedirectResponse {
@@ -55,11 +62,15 @@ class ChatController extends AbstractController
         }
     }
 
-    #[Route('/chat/new/{idPost}', name: 'chat_new')]
+    /**
+     * route that create a new chat and redirect to the chat view
+     */
+    #[Route('/new/{idPost}', name: 'chat_new')]
     public function new(
         int $idPost
     ): RedirectResponse {
         $post = $this->postRepository->find($idPost);
+
         $chat = $this->getChatByPost($post);
         if ($chat) {
             return $this->redirectToRoute('chat_view', [
@@ -79,19 +90,23 @@ class ChatController extends AbstractController
         }
     }
 
-    #[Route('/chat/send', name: 'chat_send')]
+    /**
+     * route that send a message into a chat and redirect to chat view
+     */
+    #[Route('/send', name: 'chat_send')]
     public function send(
         Request $request
     ): RedirectResponse {
         $dto = new MessageDto();
         $this->createForm(MessageType::class, $dto)
             ->handleRequest($request);
-        $message = (new Message())
-            ->setContent($dto->getContent())
-            ->setChat($dto->getChat())
-            ->setSender($this->getUser())
-            ->setTimestamp(new \DateTime());
-        $this->entityManager->persist($message);
+        $this->entityManager->persist(
+            (new Message())
+                ->setContent($dto->getContent())
+                ->setChat($dto->getChat())
+                ->setSender($this->getUser())
+                ->setTimestamp(new \DateTime())
+        );
         $this->entityManager->flush();
 
         return $this->redirectToRoute('chat_view', [
@@ -99,16 +114,19 @@ class ChatController extends AbstractController
         ]);
     }
 
-    #[Route('/chat/{idChat}', name: 'chat_view')]
+    /**
+     * route that display a chat view
+     */
+    #[Route('/{idChat}', name: 'chat_view')]
     public function view(
         int $idChat
     ): Response {
-
         $chat = $this->chatRepository->find($idChat);
+
         $form = $this->createForm(MessageType::class, (new MessageDto())->setChat($chat));
         $username = $chat->getPost()->getUser()->getUsername();
         return $this->render('chat/view.html.twig', [
-            'title' => $username,
+            'title' => "$username (chat)",
             'chat' => $chat,
             'form' => $form->createView()
         ]);

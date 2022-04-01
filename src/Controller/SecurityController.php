@@ -4,7 +4,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Entity\Address;
-use App\Dto\Registration;
+use App\Dto\Registration as RegistrationDto;
 use App\Form\RegistrationFormType;
 use Symfony\Component\Form\FormError;
 use Doctrine\ORM\EntityManagerInterface;
@@ -12,14 +12,37 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
-class RegistrationController extends AbstractController
+class SecurityController extends AbstractController
 {
-    #[Route('/register', name: 'register_index')]
-    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager): Response
+    public function __construct(
+        private AuthenticationUtils $authenticationUtils,
+        private UserPasswordHasherInterface $userPasswordHasher,
+        private EntityManagerInterface $entityManager
+    ) {
+    }
+
+    #[Route('/login', name: 'login_index')]
+    public function login(): Response
     {
-        $registration = new Registration();
+        return $this->render('login/index.html.twig', [
+            'title' => 'Login',
+            'error' => $this->authenticationUtils->getLastAuthenticationError(),  // get error
+            'last_username' => $this->authenticationUtils->getLastUsername(),     // get last username
+        ]);
+    }
+
+    #[Route('/logout', name: 'logout_index')]
+    public function logout(): void
+    {
+    }
+
+    #[Route('/register', name: 'register_index')]
+    public function register(Request $request): Response
+    {
+        $registration = new RegistrationDto();
         $form = $this->createForm(RegistrationFormType::class, $registration);
         $form->handleRequest($request);
 
@@ -36,28 +59,29 @@ class RegistrationController extends AbstractController
                     ->setNumber($registration->getNumber())
                     ->setCity($registration->getCity())
                     ->setStreet($registration->getStreet());
-                $entityManager->persist($address);
+                $this->entityManager->persist($address);
 
                 $user = (new User());
                 $user->setEmail($registration->getEmail())
                     ->setUsername($registration->getUsername())
                     ->setPhone($registration->getPhone())
                     ->setPassword(
-                        $userPasswordHasher->hashPassword(
+                        $this->userPasswordHasher->hashPassword(
                             $user,
                             $form->get('password')->getData()
                         )
                     )
                     ->setAddress($address);
 
-                $entityManager->persist($user);
-                $entityManager->flush();
+                $this->entityManager->persist($user);
+                $this->entityManager->flush();
 
                 return $this->redirectToRoute('login_index');
             }
         }
 
         return $this->render('registration/register.html.twig', [
+            'title' => 'Register',
             'registrationForm' => $form->createView(),
         ]);
     }

@@ -13,8 +13,8 @@ class Research
     private ?int $minCost = 0;
     private ?string $postcode = '';
 
-    public function __construct(){
-
+    public function __construct()
+    {
     }
 
     public function getCategory(): ?Category

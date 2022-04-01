@@ -13,7 +13,7 @@ class Profile
     private string $email;
     private string $city;
 
-    #[Assert\Regex( pattern: '/^[0-9]{5}$/', message: 'Postcode must be in format XXXXX')]
+    #[Assert\Regex(pattern: '/^[0-9]{5}$/', message: 'Postcode must be in format XXXXX')]
     private int $postcode;
     private string $street;
     private int $number;
@@ -25,11 +25,12 @@ class Profile
     #[Assert\EqualTo(propertyPath: 'newPassword')]
     private string $newPasswordConfirmation;
 
-    public function __construct(User $user) {
+    public function __construct(User $user)
+    {
         $this->username = $user->getUsername();
         $this->email = $user->getEmail();
         $this->phone = $user->getPhone();
-        $address = $user->getAddress(); 
+        $address = $user->getAddress();
         $this->city = $address->getCity();
         $this->postcode = $address->getPostcode();
         $this->street = $address->getStreet();

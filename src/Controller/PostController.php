@@ -15,29 +15,41 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 
+/** @method \App\Entity\User getUser() */
+#[Route('/post')]
 class PostController extends AbstractController
 {
-    #[Route('/post', name: 'post_index')]
+    public function __construct(
+        private EntityManagerInterface $entityManger,
+        private PostRepository $postRepository,
+        private FavoriteRepository $favoriteRepository
+    ) {
+    }
+
+    /**
+     * route that display and handle a form to add a Post in database
+     */
+    #[Route('/', name: 'post_index')]
     public function index(
-        Request $request,
-        EntityManagerInterface $entityManager
+        Request $request
     ): Response {
-        $postDto = new PostDto();
-        $postForm = $this->createForm(PostType::class, $postDto);
+        $dto = new PostDto();
+        $postForm = $this->createForm(PostType::class, $dto);
         $postForm->handleRequest($request);
+
         if ($postForm->isSubmitted() && $postForm->isValid()) {
             $post = (new Post())
-                ->setTitle($postDto->getTitle())
-                ->setCategory($postDto->getCategory())
-                ->setPrice($postDto->getPrice())
-                ->setDetail($postDto->getDetail())
+                ->setTitle($dto->getTitle())
+                ->setCategory($dto->getCategory())
+                ->setPrice($dto->getPrice())
+                ->setDetail($dto->getDetail())
                 ->setPublicationDate(new \DateTime())
                 ->setUser($this->getUser());
-            $entityManager->persist($post);
-            $entityManager->flush();
+            $this->entityManager->persist($post);
+            $this->entityManager->flush();
 
             // handle image
-            // TODO handle multiple file
+            // TODO handle multiple image
             /** @var \Symfony\Component\HttpFoundation\File\File $imageFile */
             if ($imageFile = $postForm->get('image')->getData()) {
                 $rank = 0;
@@ -47,97 +59,114 @@ class PostController extends AbstractController
                 try {
                     $imageFile->move(
                         __DIR__ . '/../../public/img/posts/',
-                        $imageEntity->getPost()->getId() . '-' . $rank
+                        $post->getId() . '-' . $rank
                     );
-                    $entityManager->persist($imageEntity);
+                    $this->entityManager->persist($imageEntity);
                 } catch (FileException $e) {
+                    // handle FileException
                 }
             }
 
-            $entityManager->flush();
+            $this->entityManager->flush();
             return $this->redirectToRoute('post_view', ['idPost' => $post->getId()]);
         }
 
         return $this->render('post/index.html.twig', [
+            'title' => 'Publish a post',
             'postForm' => $postForm->createView()
         ]);
     }
 
-    #[Route('/post/view/{idPost}', name: 'post_view')]
+    /**
+     * route that show a post
+     */
+    #[Route('/view/{idPost}', name: 'post_view')]
     public function view(
-        int $idPost,
-        PostRepository $postRepository,
-        FavoriteRepository $favoriteRepository
+        int $idPost
     ): Response {
-        $post = $postRepository->findOneBy(['id' => $idPost]);
+        $post = $this->postRepository->find($idPost);
         return $this->render('post/view.html.twig', [
+            'title' => $post->getTitle(),
             'post' => $post,
-            'owner' => $this->getUser() == $post->getUser(),
-            'isFavorite' => $favoriteRepository->findOneBy(['post' => $post, 'user' => $this->getUser()])
+            'isOwner' => $this->getUser() == $post->getUser(),
+            'isFavorite' => !!$this->favoriteRepository->findOneBy(
+                [
+                    'post' => $post,
+                    'user' => $this->getUser()
+                ]
+            )
         ]);
     }
 
-    #[Route('/post/edit/{idPost}', name: 'post_edit')]
+    /**
+     * route that handle and display a form to edit a post
+     */
+    #[Route('/edit/{idPost}', name: 'post_edit')]
     public function edit(
         int $idPost,
-        PostRepository $postRepository,
-        Request $request, 
-        EntityManagerInterface $entityManager
+        Request $request,
     ) {
-        $post = $postRepository->findOneBy(['id' => $idPost]);
+        $post = $this->postRepository->find($idPost);
         if ($post->getUser() !== $this->getUser()) {
             return $this->redirectToRoute('post_view', ['idPost' => $idPost]);
         } else {
-            $postDto = (new PostDto())
+            $dto = (new PostDto())
                 ->setTitle($post->getTitle())
                 ->setCategory($post->getCategory())
                 ->setPrice($post->getPrice())
                 ->setDetail($post->getDetail());
-            $postForm = $this->createForm(PostType::class, $postDto);
+            $postForm = $this->createForm(PostType::class, $dto);
             $postForm->handleRequest($request);
+
             if ($postForm->isSubmitted() && $postForm->isValid()) {
-                $post->setTitle($postDto->getTitle())
-                    ->setCategory($postDto->getCategory())
-                    ->setPrice($postDto->getPrice())
-                    ->setDetail($postDto->getDetail());
-                $entityManager->persist($post);
-                $entityManager->flush();
-                return $this->redirectToRoute('post_view', ['idPost' => $post->getId()]);
+                $post->setTitle($dto->getTitle())
+                    ->setCategory($dto->getCategory())
+                    ->setPrice($dto->getPrice())
+                    ->setDetail($dto->getDetail());
+                $this->entityManager->persist($post);
+                $this->entityManager->flush();
+
+                return $this->redirectToRoute('post_view', [
+                    'idPost' => $post->getId()
+                ]);
             } else {
                 return $this->render('post/edit.html.twig', [
+                    'title' => 'Edit',
                     'postForm' => $postForm->createView(),
                     'post' => $post
                 ]);
             }
         }
-
-        return $this->redirectToRoute('post_view', ['idPost' => $idPost]);
+        return $this->redirectToRoute('post_view', [
+            'idPost' => $idPost
+        ]);
     }
 
-    #[Route('post/delete/{idPost}', name: 'post_delete')]
+    /**
+     * route that delete a post
+     */
+    #[Route('/delete/{idPost}', name: 'post_delete')]
     public function delete(
-        int $idPost,
-        PostRepository $postRepository,
-        EntityManagerInterface $entityManager
+        int $idPost
     ) {
-        $post = $postRepository->findOneBy(['id' => $idPost]);
+        $post = $this->postRepository->find($idPost);
         if ($post->getUser() !== $this->getUser()) {
             return $this->redirectToRoute('post_view', ['idPost' => $idPost]);
         } else {
-            foreach($post->getChats() as $chat) {
-                foreach($chat->getMessages() as $message) {
-                    $entityManager->remove($message);
+            foreach ($post->getChats() as $chat) {
+                foreach ($chat->getMessages() as $message) {
+                    $this->entityManager->remove($message);
                 }
-                $entityManager->remove($chat);
+                $this->entityManager->remove($chat);
             }
-            foreach($post->getImages() as $image){
-                $entityManager->remove($image);
+            foreach ($post->getImages() as $image) {
+                $this->entityManager->remove($image);
             }
-            foreach($post->getFavorites() as $favorite){
-                $entityManager->remove($favorite);
+            foreach ($post->getFavorites() as $favorite) {
+                $this->entityManager->remove($favorite);
             }
-            $entityManager->remove($post);
-            $entityManager->flush();
+            $this->entityManager->remove($post);
+            $this->entityManager->flush();
             return $this->redirectToRoute('index_index');
         }
     }

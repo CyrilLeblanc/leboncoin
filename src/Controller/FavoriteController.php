@@ -11,38 +11,59 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
+/** @method \App\Entity\User getUser() */
+#[Route('/favorite')]
 class FavoriteController extends AbstractController
 {
-
-    #[Route('/favorite', name: 'favorite_index')]
-    public function index(
-        FavoriteRepository $favoriteRepository
-    ): Response {
-        $favorites = $favoriteRepository->findBy(['user' => $this->getUser()], ['createdAt' => 'DESC']);
-        return $this->render('favorite/index.html.twig', [
-            'favorites' => $favorites,
-        ]);        
+    public function __construct(
+        private FavoriteRepository $favoriteRepository,
+        private PostRepository $postRepository,
+        private EntityManagerInterface $entityManager
+    ) {
     }
 
-    #[Route('/favorite/toggle/{idPost}', name: 'favorite_toggle')]
-    public function toggle(
-        int $idPost,
-        PostRepository $postRepository,
-        FavoriteRepository $favoriteRepository,
-        EntityManagerInterface $entityManager
-    ): RedirectResponse {
+    /**
+     * route that display a list of favorite post
+     */
+    #[Route('/', name: 'favorite_index')]
+    public function index(): Response
+    {
+        return $this->render('favorite/index.html.twig', [
+            'title' => 'Favorites',
+            'favorites' => $this->favoriteRepository->findByUser(
+                $this->getUser(),
+                ['createdAt' => 'DESC']
+            ),
+        ]);
+    }
 
-        $post = $postRepository->findOneBy(['id' => $idPost]);
-        if ($favoriteRepository->findOneBy(['post' => $post, 'user' => $this->getUser()])) {
-            $entityManager->remove($favoriteRepository->findOneBy(['post' => $post, 'user' => $this->getUser()]));
+    /**
+     * a route that allow to toggle favorite of a post
+     */
+    #[Route('/toggle/{idPost}', name: 'favorite_toggle')]
+    public function toggle(
+        int $idPost
+    ): RedirectResponse {
+        $post = $this->postRepository->find($idPost);
+
+        $favoriteEntity = $this->favoriteRepository->findOneBy(
+            [
+                'post' => $post,
+                'user' => $this->getUser()
+            ]
+        );
+
+        if ($favoriteEntity) {
+            $this->entityManager->remove($favoriteEntity);
         } else {
-            $favorite = (new FavoriteEntity())
-                ->setPost($post)
-                ->setUser($this->getUser())
-                ->setCreatedAt(new \DateTimeImmutable());
-            $entityManager->persist($favorite);
+            $this->entityManager->persist(
+                (new FavoriteEntity())
+                    ->setPost($post)
+                    ->setUser($this->getUser())
+                    ->setCreatedAt(new \DateTimeImmutable())
+            );
         }
-        $entityManager->flush();
+        $this->entityManager->flush();
 
         return $this->redirectToRoute('post_view', ['idPost' => $idPost]);
     }

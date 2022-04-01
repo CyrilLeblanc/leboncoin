@@ -4,7 +4,8 @@ namespace App\Dto;
 
 use App\Entity\Category;
 
-class Post{
+class Post
+{
     private string $title;
     private Category $category;
     private float $price;

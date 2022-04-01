@@ -2,7 +2,8 @@
 
 namespace App\Dto;
 
-class Registration {
+class Registration
+{
     private string $email;
     private string $username;
     private string $phone;

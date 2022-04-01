@@ -1,7 +1,5 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello ProfileController!{% endblock %}
-
 {% block body %}
     {% if app.user.id == user.id %}
         <a href="{{ path('profile_edit') }}">Edit profile</a>

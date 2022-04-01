@@ -9,33 +9,34 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
+#[Route('/research')]
 class ResearchController extends AbstractController
 {
-    #[Route('/research', name: 'research_index')]
-    public function index(
-        ResearchRepository $researchRepository
-    ): Response
+    public function __construct(
+        private ResearchRepository $researchRepository
+    ) {
+    }
+
+    /**
+     * route that display current user's research history
+     */
+    #[Route('/', name: 'research_index')]
+    public function index(): Response
     {
         return $this->render('research/index.html.twig', [
-            'researches' => $researchRepository->findBy(['user' => $this->getUser()], ['dateTime' => 'DESC']),
+            'title' => 'Research',
+            'researches' => $this->researchRepository->findByUser($this->getUser(), ['dateTime' => 'DESC']),
             'formObject' => $this->createForm(ResearchType::class),
         ]);
     }
 
-    #[Route('/research/clear', name: 'research_clear')]
-    public function clear(
-        ResearchRepository $researchRepository
-    ): RedirectResponse
+    /**
+     * route that clear the current user's history and redirect to research_index
+     */
+    #[Route('/clear', name: 'research_clear')]
+    public function clear(): RedirectResponse
     {
-        /** @var \App\Entity\User $user */
-        $user = $this->getUser();
-
-        if ($user) {
-            $history = $user->getResearch();
-            foreach ($history as $research) {
-                $researchRepository->remove($research);
-            }
-        }
+        $this->researchRepository->clearHistoryForUser($this->getUser());
         return $this->redirectToRoute('research_index');
     }
 }

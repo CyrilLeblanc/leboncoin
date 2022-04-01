@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Research;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
@@ -43,6 +44,14 @@ class ResearchRepository extends ServiceEntityRepository
         if ($flush) {
             $this->_em->flush();
         }
+    }
+
+    public function clearHistoryForUser(User $user)
+    {
+        foreach ($user->getResearch() as $research) {
+            $this->remove($research, false);
+        }
+        $this->_em->flush();
     }
 
     // /**
