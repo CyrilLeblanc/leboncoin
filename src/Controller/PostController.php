@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Entity\Post;
-use App\Dto\Favorite;
 use App\Entity\Image;
 use App\Form\PostType;
 use App\Dto\Post as PostDto;
@@ -125,6 +124,12 @@ class PostController extends AbstractController
         if ($post->getUser() !== $this->getUser()) {
             return $this->redirectToRoute('post_view', ['idPost' => $idPost]);
         } else {
+            foreach($post->getChats() as $chat) {
+                foreach($chat->getMessages() as $message) {
+                    $entityManager->remove($message);
+                }
+                $entityManager->remove($chat);
+            }
             foreach($post->getImages() as $image){
                 $entityManager->remove($image);
             }
