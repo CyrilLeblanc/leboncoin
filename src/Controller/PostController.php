@@ -20,7 +20,7 @@ use Symfony\Component\HttpFoundation\File\Exception\FileException;
 class PostController extends AbstractController
 {
     public function __construct(
-        private EntityManagerInterface $entityManger,
+        private EntityManagerInterface $entityManager,
         private PostRepository $postRepository,
         private FavoriteRepository $favoriteRepository
     ) {

@@ -92,7 +92,6 @@ class ProfileController extends AbstractController
     public function user(
         int $idUser
     ): Response {
-        /** @var \App\Entity\User $user */
         $user = $this->userRepository->find($idUser);
 
         return $this->render('profile/index.html.twig', [
